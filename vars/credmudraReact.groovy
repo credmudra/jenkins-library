@@ -76,16 +76,11 @@ def call(boolean deploy,int port){
                         def baseName = allJob[0];
                         def projectName = allJob[allJob.length-2];
 
-                        if (env.BRANCH_NAME =~ /^(develop|(feature|(bug|hot)fix)(\/[a-zA-Z0-9]+([-_][a-zA-Z0-9]+)*){1,2}|\/[0-9]+(\.[0-9]+)*(-(alpha|beta|rc)[0-9]*)?)$/) {
+                         if (env.BRANCH_NAME =~ /^(develop|(feature|(bug|hot)fix)(\/[a-zA-Z0-9]+([-_][a-zA-Z0-9]+)*){1,2}|\/[0-9]+(\.[0-9]+)*(-(alpha|beta|rc)[0-9]*)?)$/) {
 
-                            sh 'scp -o StrictHostKeyChecking=no .env root@'+"$CREDMUDRA_DEV_SERVER_IP"+':/root'
-                            sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_DEV_SERVER_IP"+' docker ps -q --filter \\"name='+"$projectName"+'\\" \\| xargs -r docker stop'
-                            sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_DEV_SERVER_IP"+' docker ps -aq --filter \\"name='+"$projectName"+'\\" \\| xargs -r docker rm'
-                            sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_DEV_SERVER_IP"+' docker images -af reference=\\"'+"$baseName/$projectName"+'\\" -q \\| xargs -r docker rmi'
-                            sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_DEV_SERVER_IP"+' docker pull '+"$baseName/$projectName"
-                            sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_DEV_SERVER_IP"+' docker run -d --network=\\"cred-servers\\" -p '+"$port"+':80 --env-file=.env --name '+"$projectName $baseName/$projectName"
-
-
+                            sh 'docker ps -q --filter name='+"$projectName"+' | xargs -r docker stop'
+                            sh 'docker ps -aq --filter name='+"$projectName"+' | xargs -r docker rm'
+                            sh 'docker run -d --network=cred-servers -p '+"$port"+':80 '+  "$volume"+ ' --env-file=.env --name '+"$projectName $baseName/$projectName"
                         }
 
                         if (env.BRANCH_NAME == 'master') {
