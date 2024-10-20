@@ -83,19 +83,6 @@ def call(boolean deploy,int port){
 
                         }
 
-                        if (env.BRANCH_NAME == 'uat') {
-                               sshagent(credentials: ['credmudra-uat-private-key']) {
-
-                                sh 'scp -o StrictHostKeyChecking=no .env root@'+"$CREDMUDRA_UAT_SERVER_IP"+':/root'
-                                sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_UAT_SERVER_IP"+' docker ps -q --filter \\"name='+"$projectName"+'\\" \\| xargs -r docker stop'
-                                sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_UAT_SERVER_IP"+' docker ps -aq --filter \\"name='+"$projectName"+'\\" \\| xargs -r docker rm'
-                                sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_UAT_SERVER_IP"+' docker images -af reference=\\"'+"$baseName/$projectName"+'\\" -q \\| xargs -r docker rmi'
-                                sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_UAT_SERVER_IP"+' docker pull '+"$baseName/$projectName"
-                                sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_UAT_SERVER_IP"+' docker run -d --network=\\"cred-servers\\" -p '+"$port"+':80 --env-file=.env --name '+"$projectName $baseName/$projectName"
-
-                            }     
-                        }
-
                         if (env.BRANCH_NAME == 'master') {
 
                             if(projectName == 'cred-website'){
