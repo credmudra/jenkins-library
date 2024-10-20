@@ -80,7 +80,7 @@ def call(boolean deploy,int port){
 
                             sh 'docker ps -q --filter name='+"$projectName"+' | xargs -r docker stop'
                             sh 'docker ps -aq --filter name='+"$projectName"+' | xargs -r docker rm'
-                            sh 'docker run -d --network=cred-servers -p '+"$port"+':80 '+  "$volume"+ ' --env-file=.env --name '+"$projectName $baseName/$projectName"
+                            sh 'docker run -d --network=nspl-network -p ' + "$port" + ':80 --env-file=.env --name ' + "$projectName $baseName/$projectName"
                         }
 
                         if (env.BRANCH_NAME == 'master') {
