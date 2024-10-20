@@ -79,7 +79,7 @@ def call(boolean deploy,int port,String volume){
                             sh 'docker ps -aq --filter \\"name='+"$projectName"+'\\" | xargs -r docker rm'
                             sh 'docker images -af reference=\\"'+"$baseName/$projectName"+'\\" -q | xargs -r docker rmi'
                             sh 'docker pull '+"$baseName/$projectName"
-                            sh 'docker run -d --network=\\"cred-servers\\" -p '+"$port"+':80 '+  "$volume"+ ' --env-file=.env --name '+"$projectName $baseName/$projectName"
+                            sh 'docker run -d --network=cred-servers -p '+"$port"+':80 '+  "$volume"+ ' --env-file=.env --name '+"$projectName $baseName/$projectName"
 
 
                         }
