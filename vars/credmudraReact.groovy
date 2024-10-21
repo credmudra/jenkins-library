@@ -51,7 +51,7 @@ def call(boolean deploy,int port){
                         echo 'Building docker image & pushing to docker registry'
                         def allJob = env.JOB_NAME.tokenize('/') as String[];
                         def baseName = allJob[0];
-                        if(baseName != credmudra )
+                        if(baseName != 'credmudra' )
                            baseName='credmudra';
                         
                         def projectName = allJob[allJob.length-2];
@@ -78,7 +78,7 @@ def call(boolean deploy,int port){
                         def allJob = env.JOB_NAME.tokenize('/') as String[];
                         def baseName = allJob[0];
                         def projectName = allJob[allJob.length-2];
-                        if(baseName != credmudra )
+                        if(baseName != 'credmudra' )
                            baseName='credmudra';
 
                          if (env.BRANCH_NAME =~ /^(develop|(feature|(bug|hot)fix)(\/[a-zA-Z0-9]+([-_][a-zA-Z0-9]+)*){1,2}|\/[0-9]+(\.[0-9]+)*(-(alpha|beta|rc)[0-9]*)?)$/) {
