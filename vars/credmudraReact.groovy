@@ -51,6 +51,9 @@ def call(boolean deploy,int port){
                         echo 'Building docker image & pushing to docker registry'
                         def allJob = env.JOB_NAME.tokenize('/') as String[];
                         def baseName = allJob[0];
+                        if(baseName != credmudra )
+                           baseName='credmudra';
+                        
                         def projectName = allJob[allJob.length-2];
                         
                         sh 'docker build --build-arg VERSION='+"$BUILD_NUMBER"+' --build-arg IMAGE='+"$projectName"+' -t '+"$projectName:$BUILD_NUMBER"+' .'
