@@ -84,25 +84,14 @@ def call(boolean deploy,int port,String volume){
                         }
 
                         if (env.BRANCH_NAME == 'master') {
-                                if(projectName == 'lds-api' || projectName == 'credmudra-lds'){
 
-                                    sshagent(credentials: ['credmudra-prod-lds-private-key']) {
-                                        sh 'scp -o StrictHostKeyChecking=no .env root@'+"$CREDMUDRA_LDS_PROD_SERVER_IP"+':/root'
-                                        sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_LDS_PROD_SERVER_IP"+' docker ps -q --filter \\"name='+"$projectName"+'\\" \\| xargs -r docker stop'
-                                        sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_LDS_PROD_SERVER_IP"+' docker ps -aq --filter \\"name='+"$projectName"+'\\" \\| xargs -r docker rm'
-                                        sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_LDS_PROD_SERVER_IP"+' docker images -af reference=\\"'+"$baseName/$projectName"+'\\" -q \\| xargs -r docker rmi'
-                                        sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_LDS_PROD_SERVER_IP"+' docker pull '+"$baseName/$projectName"
-                                        sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_LDS_PROD_SERVER_IP"+' docker run -d --network=\\"cred-servers\\" -p '+"$port"+':80 '+"$volume"+' --env-file=.env -e JAVA_OPTS=\\"-Xms5G -Xmx12G\\" --name '+"$projectName $baseName/$projectName"
-                                    }
-                                }else{
-                                    sshagent(credentials: ['credmudra-prod-private-key']) {
+                                sshagent(credentials: ['credmudra-prod-gateway-private-key']) {
                                         sh 'scp -o StrictHostKeyChecking=no .env root@'+"$CREDMUDRA_PROD_SERVER_IP"+':/root'
                                         sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_PROD_SERVER_IP"+' docker ps -q --filter \\"name='+"$projectName"+'\\" \\| xargs -r docker stop'
                                         sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_PROD_SERVER_IP"+' docker ps -aq --filter \\"name='+"$projectName"+'\\" \\| xargs -r docker rm'
                                         sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_PROD_SERVER_IP"+' docker images -af reference=\\"'+"$baseName/$projectName"+'\\" -q \\| xargs -r docker rmi'
                                         sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_PROD_SERVER_IP"+' docker pull '+"$baseName/$projectName"
                                         sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_PROD_SERVER_IP"+' docker run -d --network=\\"cred-servers\\" -p '+"$port"+':80 '+"$volume"+' --env-file=.env --name '+"$projectName $baseName/$projectName"
-                                    }
                                 }
                         }
                     }
