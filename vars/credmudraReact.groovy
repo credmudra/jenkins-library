@@ -83,8 +83,8 @@ def call(boolean deploy,int port){
 
                          if (env.BRANCH_NAME =~ /^(develop|(feature|(bug|hot)fix)(\/[a-zA-Z0-9]+([-_][a-zA-Z0-9]+)*){1,2}|\/[0-9]+(\.[0-9]+)*(-(alpha|beta|rc)[0-9]*)?)$/) {
 
-                            sh 'docker ps -q --filter name='+"$projectName"+' | xargs -r docker stop'
-                            sh 'docker ps -aq --filter name='+"$projectName"+' | xargs -r docker rm'
+                            sh 'docker ps -q --filter name=^'+"$projectName"+' | xargs -r docker stop'
+                            sh 'docker ps -aq --filter name=^'+"$projectName"+' | xargs -r docker rm'
                             sh 'docker run -d --network=cred-servers -p ' + "$port" + ':80 --env-file=.env --name ' + "$projectName $baseName/$projectName"
                         }
 
