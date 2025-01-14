@@ -55,6 +55,12 @@ def call(boolean deploy,int port){
                            baseName='credmudra';
                         
                         def projectName = allJob[allJob.length-2];
+
+                         if (env.BRANCH_NAME == 'master') {
+                              if(projectName=='cred-app')
+                                        projectName='credmudra-app';
+                         }
+                       
                         
                         sh 'docker build --build-arg VERSION='+"$BUILD_NUMBER"+' --build-arg IMAGE='+"$projectName"+' -t '+"$projectName:$BUILD_NUMBER"+' .'
                         sh 'docker tag '+"$projectName:$BUILD_NUMBER"+' '+"$baseName/$projectName"
