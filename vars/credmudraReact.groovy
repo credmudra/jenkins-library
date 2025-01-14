@@ -89,6 +89,8 @@ def call(boolean deploy,int port){
                         }
 
                         if (env.BRANCH_NAME == 'master') {
+                            if(projectName=='cred-app')
+                                projectName='credmudra-app';
                             
                             if(projectName == 'cred-website' || projectName == 'cred-app'){
                                 sshagent(credentials: ['credmudra-prod-gateway-private-key']) {
