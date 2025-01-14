@@ -89,10 +89,13 @@ def call(boolean deploy,int port){
                         }
 
                         if (env.BRANCH_NAME == 'master') {
-                            if(projectName=='cred-app')
-                                projectName='credmudra-app';
+                            
                             
                             if(projectName == 'cred-website' || projectName == 'cred-app'){
+
+                                if(projectName=='cred-app')
+                                        projectName='credmudra-app';
+                                
                                 sshagent(credentials: ['credmudra-prod-gateway-private-key']) {
                                     sh 'scp -o StrictHostKeyChecking=no .env root@'+"$CREDMUDRA_PROD_SERVER_IP_M1"+':/root'
                                     sh 'ssh -o StrictHostKeyChecking=no root@'+"$CREDMUDRA_PROD_SERVER_IP_M1"+' docker pull '+"$baseName/$projectName"
